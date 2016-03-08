@@ -1,36 +1,45 @@
-var React = require('react'),
-    ReactRedux = require('react-redux'),
-    Nav = require('./nav'),
-    auth = require('../auth');
+import { connect } from 'react-redux';
+import { Navigation } from 'react-router';
+import React, { PropTypes } from 'react';
+import ReactMixin from 'react-mixin';
+import auth from '../auth';
+import Nav from './nav';
+import Game from './game';
+import SignUp from './signup';
+import Login from './login';
 
-var Wrap = React.createClass({
-    componentDidMount: function() {
+class Wrap extends React.Component {
+    componentDidMount() {
         if (!auth.loggedIn() || !this.props.game.ongoing) {
             this.props.history.pushState(null, '/');
         }
-    },
-    render: function(){
+    }
+
+    render() {
         return (
             <div>
                 <Nav/>
-                {this.props.children}
+                <div className="container">
+                    {auth.loggedIn() ? <Game /> : <div><SignUp history={this.props.history}/><Login /></div>}
+                </div>
             </div>
         );
     }
-});
+}
 
-var mapStateToProps = function(state){
+Wrap.propTypes = {
+    game: PropTypes.object.isRequired,
+    history: PropTypes.object.isRequired,
+    children: PropTypes.object
+};
+
+const mapStateToProps = (state) => {
     return {
         game: state.game,
-        auth: state.login.auth,
+        auth: state.login.auth
     };
 };
 
-var mapDispatchToProps = function(){
-    return {
+ReactMixin.onClass(Wrap, Navigation);
 
-    }
-};
-
-
-module.exports = ReactRedux.connect(mapStateToProps, mapDispatchToProps)(Wrap);
+export default connect(mapStateToProps)(Wrap);

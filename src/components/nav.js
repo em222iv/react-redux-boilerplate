@@ -1,71 +1,58 @@
-var React = require('react'),
-    Login = require('./login'),
-    ReactRedux = require('react-redux'),
-    ptypes = React.PropTypes,
-    actions = require('../actions'),
-    auth = require('../auth');
+import { connect } from 'react-redux';
+import React, { PropTypes, Component } from 'react';
 
+import actions from '../actions';
+import auth from '../auth';
+import Login from './login';
 
-
-var Nav = React.createClass({
-    propTypes: {
-        login: ptypes.func.isRequired
-    },
-    componentWillMount: function() {
-        var user = {
-            username: "",
-            password: ""
+class Nav extends Component {
+    //checks if user can be loggd in via token
+    componentWillMount() {
+        const user = {
+            username: '',
+            password: ''
         };
-        auth.login("", "", (loggedIn) => {
-            if(loggedIn){
+
+        auth.login('', '', (loggedIn) => {
+            if (loggedIn) {
                 this.props.login(user);
             }
         });
+    }
 
-    },
-    componentDidMount: function() {
-        if (!auth.loggedIn()) {
-            // The line bolow here do nothing except cause error in webpack. So out commended it.
-            //this.props.history.pushState(null, '/');
-        }
-    },
-    render: function(){
+    render() {
         return (
             <div>
-                <Login/>
                 <nav>
                     <div className="container">
                         <div className="nav-wrapper">
-                            <a href="#" className="brand-logo">Logo</a>
-                            <ul id="nav-mobile" className="right hide-on-med-and-down">
-                                <li><a className="dropdown-button" href="#" data-activates="dropdown1">Get started</a></li>
-                            </ul>
+                            <a href="#" style={{fontSize: '3rem'}}>Logo</a>
+                            <a href="#" onClick={this.props.logout}>Logout</a>
                         </div>
                     </div>
                 </nav>
             </div>
         );
     }
-});
+}
 
-
-Nav.divStyle = {
-    left: -250
+Nav.propTypes = {
+    login: PropTypes.func.isRequired
 };
 
-var mapStateToProps = function(state){
+const mapStateToProps = (state) => {
     return state.login;
 };
 
-var mapDispatchToProps = function(dispatch){
+const mapDispatchToProps = (dispatch) => {
     return {
-        login: function(loginCall){
+        login: (loginCall) => {
             actions.login(loginCall, dispatch);
         },
-        logout: function(){
+        logout: () => {
             dispatch(actions.logout());
         }
-    }
+    };
 };
 
-module.exports = ReactRedux.connect(mapStateToProps, mapDispatchToProps)(Nav);
+export default connect(mapStateToProps, mapDispatchToProps)(Nav);

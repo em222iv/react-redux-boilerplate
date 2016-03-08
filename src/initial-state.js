@@ -1,13 +1,19 @@
-module.exports = function(){
+export default ()=>{
     return {
         login: {
-            auth: false
+            users: [
+                {username: 'test', password: 'pass'}
+            ],
+            auth: null
         },
         points: {
             currentValue: 0
         },
         game: {
             ongoing: false
+        },
+        currChallenge: {
+            challenge: 0
         },
         timer: {
             elapsed: 0

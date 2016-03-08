@@ -1,75 +1,78 @@
-var React = require('react'),
-    ptypes = React.PropTypes,
-    ReactRedux = require('react-redux'),
-    actions = require('../actions'),
-    auth = require('../auth'),
-    Link = require('react-router').Link;
+import React, { Component, PropTypes } from 'react';
+import { connect } from 'react-redux';
+import { Link } from 'react-router';
 
+import actions from '../actions';
 
-
-var Login = React.createClass({
-    propTypes: {
-        login: ptypes.func.isRequired
-    },
-    handleLogin: function(event) {
+class Login extends Component {
+    handleLogin(event) {
         event.preventDefault();
 
-        var user = {
+        const user = {
             username: this.refs.username.value,
             password: this.refs.password.value
         };
 
         this.props.login(user);
+    }
 
-    },
-    handleLogout: function() {
+    handleLogout() {
         this.props.logout();
-    },
-    render: function(){
+        this.props.gameOff();
+        this.props.nextChallenge('C0');
+        this.props.zeroPoints();
+    }
+
+    render() {
         return (
-            <ul id="dropdown1" style={this.divStyle} className="dropdown-content">
-                <li><a href="#">Home</a></li>
-                <li className="divider"></li>
-                <li className="noCollaplse">
-                    {(this.props.auth
-                            ?  <div></div>
-                            :  <input ref="username" id="username" type="text" placeholder="admin" className="validate"/>
-                    )}
-                </li>
-                <li className="noCollaplse">
-                    {(this.props.auth
-                            ?  <div></div>
-                            :  <input ref="password" id="password" type="password" placeholder="password" className="validate"/>
-                    )}
-                </li>
-                <li>
-                    {(this.props.auth
-                            ?  <Link to="/" href="#" onClick={this.handleLogout}>logout</Link>
-                            :  <Link to="/" onClick={this.handleLogin}>login</Link>
-                    )}
-                </li>
-            </ul>
+            <div><input ref="username" id="username" type="text" placeholder="admin"
+                        className="validate"/>
+                <input ref="password" id="password" type="password"
+                       placeholder="password"
+                       className="validate"/>
+                <button
+                    onClick={this.handleLogin.bind(this)}>login
+                </button>
+            </div>
         );
     }
-});
+}
+
+Login.propTypes = {
+    auth: PropTypes.object,
+    login: PropTypes.func.isRequired,
+    logout: PropTypes.func.isRequired,
+    gameOff: PropTypes.func.isRequired,
+    nextChallenge: PropTypes.func.isRequired,
+    zeroPoints: PropTypes.func.isRequired
+};
 
 Login.divStyle = {
-    width:200
+    width: 200
 };
 
-var mapStateToProps = function(state){
-    return state.login;
+const mapStateToProps = (state) => {
+    return {auth: state.login.auth};
 };
 
-var mapDispatchToProps = function(dispatch){
+const mapDispatchToProps = (dispatch) => {
     return {
-        login: function(loginCall){
+        login: (loginCall) => {
             actions.login(loginCall, dispatch);
         },
-        logout: function(){
+        logout: () => {
             dispatch(actions.logout());
         },
-    }
+        gameOff: () => {
+            dispatch(actions.gameOff());
+        },
+        nextChallenge: (chal) => {
+            dispatch(actions.changeChallenge(chal));
+        },
+        zeroPoints: () => {
+            dispatch(actions.pointsZero());
+        }
+    };
 };
 
-module.exports = ReactRedux.connect(mapStateToProps, mapDispatchToProps)(Login);
+export default connect(mapStateToProps, mapDispatchToProps)(Login);

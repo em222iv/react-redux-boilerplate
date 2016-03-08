@@ -1,9 +1,10 @@
-var initialState = require('./../initial-state');
+import initialState from './../initial-state';
+import C from '../constants';
 
-var Challenge2Reducer = function(state, action){
-    var newState = Object.assign({}, state);
-    switch(action.type){
-        case 'RND_SENTENCE':
+const Challenge2Reducer = (state, action)=> {
+    const newState = Object.assign({}, state);
+    switch (action.type) {
+        case C.RND_SENTENCE:
             console.log('rnd_s');
             newState.randomWord = action.wordieWord;
             return newState;
@@ -12,4 +13,4 @@ var Challenge2Reducer = function(state, action){
     }
 };
 
-module.exports = Challenge2Reducer;
+export default Challenge2Reducer;

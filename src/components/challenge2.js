@@ -1,65 +1,58 @@
-var React = require('react'),
-    ptypes = React.PropTypes,
-    ReactRedux = require('react-redux'),
-    actions = require('../actions'),
-    auth = require('../auth'),
-    Navigation = require('react-router').Navigation,
-    Modal = require('./modal'),
-    Points = require('./points'),
-    Timer = require('./timer');
+import { connect } from 'react-redux';
+import React, { Component, PropTypes } from 'react';
+import actions from '../actions';
+import Points from './points';
+import Timer from './timer';
+import ReactMixin from 'react-mixin';
+import TimerMixin from 'react-timer-mixin';
 
-var Challenge2 = React.createClass({
-    mixins: [Navigation],
-    propTypes: {
-        decrease: ptypes.func.isRequired,
-        getWord: ptypes.func.isRequired
-    },
-    componentWillMount: function() {
-        this.props.points.currentValue = 500;
-    },
-    componentDidMount: function() {
+class Challenge2 extends Component {
+    componentDidMount() {
         this.props.getWord();
-    },
-    handleChange: function(event) {
+        this.setInterval(() => {
+            this.props.decrease()
+        }, 3000);
+    }
+
+    handleChange(event) {
         this.props.decrease();
-        var a = this.props.worda.randomWord;
-        var b = event.target.value;
-        if(a == b){
-            openModal();
+        const a = this.props.worda.randomWord;
+        const b = event.target.value;
+        const loader = $(this.refs.loader);
+        if (a === b || this.props.points.currentValue == 0) {
+            this.props.nextChallenge('C0');
+            this.props.gameOff();
         }
-        var equivalency = 0;
-        var minLength = (a.length > b.length) ? b.length : a.length;
-        var maxLength = (a.length < b.length) ? b.length : a.length;
-        for(var i = 0; i < minLength; i++) {
-            if(a[i] == b[i]) {
+        let equivalency = 0;
+        const minLength = (a.length > b.length) ? b.length : a.length;
+        const maxLength = (a.length < b.length) ? b.length : a.length;
+        for (let i = 0; i < minLength; i++) {
+            if (a[i] === b[i]) {
                 equivalency++;
             }
         }
+        const weight = equivalency / maxLength;
+        loader.css('width', (weight * 100) + '%');
+    }
 
-        var weight = equivalency / maxLength;
-        var loader = $("#loader");
-        loader.css("width", (weight * 100) + "%");
-    },
-    render: function(){
-        var divStyle = {
-            width: '0%',
+    render() {
+        const divStyle = {
+            width: '0%'
         };
         return (
             <div className="section no-pad-bot" id="index-banner">
                 <div className="container">
                     <div>
-                        {(auth.loggedIn() && this.props.game.ongoing
-                                ?   <h1 className="header center orange-text">TYPE TYPE TYPE</h1>
-                                :   <h1 className="header center orange-text">Login and start new Game!</h1>
-                        )}
+                        <h1 className="header center orange-text">TYPE TYPE TYPE</h1>
                     </div>
                     <div className="row center">
+                        <h5 className="header col s12 light">Write a perfect copy of the text in the bottom of the
+                            box!</h5>
                         <div className="progress">
-                            <div id="loader" className="determinate" style={divStyle}></div>
+                            <div ref="loader" id="loader" className="determinate" style={divStyle}></div>
                         </div>
                         <div className="col row s6 offset-s3 center">
                             <Points />
-                            <Timer time="inc1" startTime="0"/>
                         </div>
                     </div>
                     <div className="row">
@@ -69,7 +62,8 @@ var Challenge2 = React.createClass({
                                     <form className="col s12">
                                         <div className="row">
                                             <div className="input-field col s12">
-                                                <textarea onChange={this.handleChange} id="textarea1" className="materialize-textarea"></textarea>
+                                                <textarea onChange={this.handleChange.bind(this)} id="textarea1"
+                                                          className="materialize-textarea"></textarea>
                                                 <label htmlFor="textarea1">Type here!</label>
                                             </div>
                                         </div>
@@ -82,20 +76,23 @@ var Challenge2 = React.createClass({
                         </div>
                     </div>
                 </div>
-
-                <Modal />
             </div>
-
         );
     }
-});
-function openModal() {
-    $('#modal').openModal({
-        dismissible: false
-    });
 }
 
-var mapStateToProps = function(state){
+Challenge2.propTypes = {
+    nextChallenge: PropTypes.string.isRequired,
+    game: PropTypes.object.isRequired,
+    worda: PropTypes.object.isRequired,
+    points: PropTypes.object.isRequired,
+    decrease: PropTypes.func.isRequired,
+    getWord: PropTypes.func.isRequired
+};
+
+ReactMixin.onClass(Challenge2, TimerMixin);
+
+const mapStateToProps = (state) => {
     return {
         points: state.points,
         game: state.game,
@@ -104,15 +101,21 @@ var mapStateToProps = function(state){
     };
 };
 
-var mapDispatchToProps = function(dispatch){
+const mapDispatchToProps = (dispatch) => {
     return {
-        decrease: function(){
+        decrease: () => {
             dispatch(actions.pointsDecrease());
         },
-        getWord: function(){
+        getWord: () => {
             dispatch(actions.getRndString());
+        },
+        nextChallenge: (chal) => {
+            dispatch(actions.changeChallenge(chal));
+        },
+        gameOff: (chal) => {
+            dispatch(actions.gameOff());
         }
-    }
+    };
 };
 
-module.exports = ReactRedux.connect(mapStateToProps, mapDispatchToProps)(Challenge2);
+export default connect(mapStateToProps, mapDispatchToProps)(Challenge2);
