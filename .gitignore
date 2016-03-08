@@ -4,3 +4,6 @@ npm-debug.log
 
 # Jetbrains
 .idea/
+
+bundle.js
+bundle.js.map
