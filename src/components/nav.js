@@ -1,7 +1,7 @@
 import { connect } from 'react-redux';
 import React, { PropTypes, Component } from 'react';
-
 import actions from '../actions';
+import { Router, Route, Link } from 'react-router';
 
 class Nav extends Component {
     render() {
@@ -10,7 +10,8 @@ class Nav extends Component {
                 <nav>
                     <div className="container">
                         <div className="nav-wrapper">
-                          NAV
+                          <Link to={'/home'}>HOME</Link>
+                          <Link to={'/about'}>MEME</Link>
                         </div>
                     </div>
                 </nav>
@@ -18,7 +19,5 @@ class Nav extends Component {
         );
     }
 }
-
-
 
 export default Nav;

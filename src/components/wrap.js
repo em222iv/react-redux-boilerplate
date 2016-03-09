@@ -17,14 +17,4 @@ class Wrap extends React.Component {
     }
 }
 
-Wrap.propTypes = {
-   points: PropTypes.object.isRequired,
-};
-
-const mapStateToProps = (state) => {
-  return {
-     points: state.points,
- };
-};
-
-export default connect(mapStateToProps)(Wrap);
+export default Wrap;
