@@ -6,16 +6,9 @@ import { Router, Route, Link } from 'react-router';
 class Nav extends Component {
     render() {
         return (
-            <div>
-                <nav>
-                    <div className="container">
-                        <div className="nav-wrapper">
-                          <Link to={'/home'}>HOME</Link>
-                          <Link to={'/about'}>MEME</Link>
-                        </div>
-                    </div>
-                </nav>
-            </div>
+            <nav className="nav">
+                <Link to={'/home'}>HOME</Link> | <Link to={'/counter'}>COUNTER</Link>
+            </nav>
         );
     }
 }

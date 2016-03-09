@@ -4,13 +4,12 @@ import React, { PropTypes } from 'react';
 import Nav from './nav';
 
 class Wrap extends React.Component {
-
     render() {
         return (
-            <div>
+            <div className="wrapper">
                 <Nav/>
                 <div className="container">
-                       {this.props.children}
+                   {this.props.children}
                 </div>
             </div>
         );
