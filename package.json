@@ -1,7 +1,7 @@
 {
-  "name": "reactsimple",
+  "name": "simple-react-boilerplate",
   "version": "0.0.0",
-  "description": "React course project",
+  "description": "Simple react boilerplate for beginners who want to understand the flow of an Redux application",
   "main": "index.js",
   "scripts": {
     "start": "webpack-dev-server --hot --inline",
@@ -9,7 +9,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "github.com/em222iv/react-simple"
+    "url": "https://github.com/em222iv/react-redux-boilerplate"
   },
   "keywords": [
     "React",
@@ -38,7 +38,9 @@
     "react-router": "=1.0.0-rc3",
     "redux": "=3.0.4",
     "webpack": "^1.12.9",
-    "webpack-dev-server": "^1.14.0"
+    "webpack-dev-server": "^1.14.0",
+    "firebase": "=2.3.1",
+    "lodash": "^3.10.1"
   },
   "dependencies": {
     "react": "^0.14.3",

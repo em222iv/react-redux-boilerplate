@@ -3,7 +3,6 @@ import C from '../constants';
 
 const PointsReducer = (state, action) => {
     const newState = Object.assign({}, state);
-
     switch (action.type) {
         case C.POINTS_INC:
             newState.currentValue += 1;

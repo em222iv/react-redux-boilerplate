@@ -1,3 +1,3 @@
 # React Redux Boilerplate
 
-Simple start-off point for building a react application
+Simple boilerplate application for React Redux.
