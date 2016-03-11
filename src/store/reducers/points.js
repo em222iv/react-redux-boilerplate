@@ -1,5 +1,5 @@
 import initialState from '../initial-state';
-import C from '../constants';
+import C from '../../constants';
 
 const PointsReducer = (state, action) => {
     const newState = Object.assign({}, state);

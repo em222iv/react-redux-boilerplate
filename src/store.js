@@ -1,7 +1,7 @@
 import { combineReducers, createStore } from 'redux';
 
-import pointsReducer from './reducers/points';
-import initialState from './initial-state';
+import pointsReducer from './store/reducers/points';
+import initialState from './store/initial-state';
 
 const reducers = combineReducers({
     points: pointsReducer,
